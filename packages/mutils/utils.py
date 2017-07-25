@@ -303,3 +303,12 @@ def getDurationFromNodes(nodes):
         return l - s
     else:
         return 0
+
+def copyFile(src, dst):
+    """
+    Make a copy of the given src path to the given destination path.
+
+    :type src: str
+    :type dst: str
+    """
+    shutil.copy(src, dst)
