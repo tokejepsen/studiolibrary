@@ -44,25 +44,30 @@ class ThumbnailCaptureMenu(QtWidgets.QMenu):
         loadImageAction.triggered.connect(self.loadIconFromDisk)
         self.addAction(loadImageAction)
 
-    def showCaptureWindow(self):
-        self.capture(show=True)
+    def showWarningDialog(self):
 
-    def capture(self, show=False):
-        
+        title = "Override Thumbnail"
         text = u"This action will delete the previous thumbnail. The " \
-                  u"previous image cannot be backed up. Do you want to " \
-                  u"confirm the action to take a new image and delete " \
-                  u"the previous one?"
+               u"previous image cannot be backed up. Do you want to " \
+               u"confirm the action to take a new image and delete " \
+               u"the previous one?"
 
         clickedButton = studioqt.MessageBox.warning(
-            None,
-            title="Override Thumbnail",
+            self.parent(),
+            title=title,
             text=text,
             enableDontShowCheckBox=True,
         )
 
         if clickedButton != QtWidgets.QDialogButtonBox.StandardButton.Yes:
-            return
+            raise Exception("Override thumbnail was canceled!")
+
+    def showCaptureWindow(self):
+        self.capture(show=True)
+
+    def capture(self, show=False):
+
+        self.showWarningDialog()
 
         filename = self._filename
 
@@ -73,6 +78,8 @@ class ThumbnailCaptureMenu(QtWidgets.QMenu):
         )
 
     def loadIconFromDisk(self):
+
+        self.showWarningDialog()
 
         filter_ = "Image Files (*.png *.jpg *.bmp)"
 

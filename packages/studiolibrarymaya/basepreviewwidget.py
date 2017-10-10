@@ -133,7 +133,7 @@ class BasePreviewWidget(QtWidgets.QWidget):
             iconPath = self.iconPath()
             if iconPath == "":
                 iconPath = self.item().thumbnailPath()
-            menu = mutils.gui.ThumbnailCaptureMenu(iconPath)
+            menu = mutils.gui.ThumbnailCaptureMenu(iconPath, self.item().libraryWidget())
             menu.thumbnailCaptured.connect(self.setIconPath)
             self.ui.thumbnailButton.setMenu(menu)
         else:
