@@ -196,7 +196,6 @@ class LibraryWidget(QtWidgets.QWidget):
         self._searchWidget.setToolTip(tip)
         self._searchWidget.setStatusTip(tip)
 
-        self._statusWidget = studioqt.StatusWidget(self)
         self._menuBarWidget = studioqt.MenuBarWidget()
         self._foldersWidget = studioqt.TreeWidget(self)
 
@@ -276,13 +275,14 @@ class LibraryWidget(QtWidgets.QWidget):
 
         self.layout().addWidget(self._menuBarWidget)
         self.layout().addWidget(self._splitter)
-        self.layout().addWidget(self._statusWidget)
 
         vbox = QtWidgets.QVBoxLayout()
         self._previewFrame.setLayout(vbox)
         self._previewFrame.layout().setSpacing(0)
         self._previewFrame.layout().setContentsMargins(0, 0, 0, 0)
         self._previewFrame.setMinimumWidth(5)
+
+        self._statusWidget = studioqt.StatusWidget(self)
 
         # -------------------------------------------------------------------
         # Setup Connections
@@ -1520,7 +1520,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
         msg = "Found {0} item{1} in {2:.3f} seconds."
         msg = msg.format(self._itemsVisibleCount, plural, t)
-        self.statusWidget().showInfoMessage(msg)
+        self.showInfoMessage(msg)
 
     def itemsVisibleCount(self):
         """
@@ -1572,8 +1572,8 @@ class LibraryWidget(QtWidgets.QWidget):
         if item:
             try:
                 item.showPreviewWidget(self)
-            except Exception, msg:
-                self.showErrorMessage(msg)
+            except Exception, e:
+                self.showErrorMessage(e)
                 self.clearPreviewWidget()
                 raise
         else:
@@ -1872,8 +1872,7 @@ class LibraryWidget(QtWidgets.QWidget):
                 self.searchWidget().setFocus()
 
         if isinstance(event, QtGui.QStatusTipEvent):
-            self.statusWidget().showInfoMessage(event.tip())
-
+            self.showInfoMessage(event.tip())
         return QtWidgets.QWidget.event(self, event)
 
     def keyReleaseEvent(self, event):
@@ -1939,9 +1938,9 @@ class LibraryWidget(QtWidgets.QWidget):
         self._dpi = dpi
 
         self.itemsWidget().setDpi(dpi)
+        self.statusWidget().setDpi(dpi)
         self.menuBarWidget().setDpi(dpi)
         self.foldersWidget().setDpi(dpi)
-        self.statusWidget().setFixedHeight(20 * dpi)
 
         self._splitter.setHandleWidth(2 * dpi)
 
@@ -2334,8 +2333,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
         msg = "Displayed {0} item{1} in {2:.3f} seconds. {3}"
         msg = msg.format(itemCount, plural, elapsedTime, hiddenText)
-        self.statusWidget().showInfoMessage(msg)
-
+        self.showInfoMessage(msg)
         logger.debug(msg)
 
     # -----------------------------------------------------------------------
